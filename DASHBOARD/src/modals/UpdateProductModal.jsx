@@ -16,6 +16,8 @@ const UpdateProductModal = ({ product }) => {
     price: "",
     category: "",
     stock: "",
+    discount_city:"",
+    discount_percent:"",
   });
 
   const categoryOptions = [
@@ -38,6 +40,8 @@ const UpdateProductModal = ({ product }) => {
         price: selectedProduct.price || "",
         category: selectedProduct.category || "",
         stock: selectedProduct.stock || "",
+        discount_city:selectedProduct.discount_city || "",
+        discount_percent : selectedProduct.discount_percent || "",
       });
     }
   }, [selectedProduct]);
@@ -51,6 +55,9 @@ const UpdateProductModal = ({ product }) => {
       price: formData.price,
       category: formData.category,
       stock: formData.stock,
+      discount_city :formData.discount_city,
+      discount_percent:formData.discount_percent,
+
     };
 
     dispatch(updateProduct(data, selectedProduct.id));
@@ -110,6 +117,34 @@ const UpdateProductModal = ({ product }) => {
             }
             className="border px-4 py-2 rounded"
           />
+
+          {/* Location  Discount field*/}
+
+          <div className ="" >
+            <p className =""> 
+              Location Discount (optional) </p>
+              <div className="" >
+                <input 
+                type ="text"
+                placeholder ="Discount city (e.g delhi)"
+                value = {formData.discount_city}
+                onChange={(e) => setFormData({...formData,discount_city:e.target.value})}
+                className="border px-4 py-2 rounded"
+                />
+                <input 
+                type="number"
+                placeholder="Discount px-4 py-2 rounded"
+                min="0"
+                max="100"
+                value={formData.discount_percent}
+                onChange={(e) => setFormData({
+                  ...formdata,discount_percent:e.target.value
+                })} 
+                className="border px-4 py-2 rounded"
+                />
+                </div>
+                </div>
+                
 
           <textarea
             placeholder="Description"

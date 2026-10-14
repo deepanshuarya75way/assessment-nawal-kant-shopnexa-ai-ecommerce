@@ -135,6 +135,14 @@ const ProductDetail = () => {
                       </span>
                     )
                   }
+
+
+                  {
+                    product.discount_city && Number(product_percent) >0 && (
+                      <span className =""> {product.discount_percent}% OFF for orders to {product.discount_city}
+                    </span>
+                    )
+                  }
                 </div>
                 <h1 className="text-3xl font-bold text-foreground mb-2">
                   {product.name}

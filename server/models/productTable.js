@@ -10,9 +10,14 @@ export async function createProductsTable() {
             ratings DECIMAL(3,2) DEFAULT 0 CHECK (ratings BETWEEN 0 AND 5), 
             images JSONB DEFAULT '[]'::JSONB, 
             stock INT NOT NULL CHECK (stock >= 0),  
-           created_by UUID NOT NULL,    
+            discount_city VARCHAR(100) DEFAULT NULL,
+            discount_percent DECIMAL(5,2) DEFAULT 0 CHECK
+             (discount_percent >= 0 AND discount_percent <= 100),
+            
+            created_by UUID NOT NULL,
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, 
-            FOREIGN KEY (created_by) REFERENCES users(id) ON DELETE CASCADE);`
+           FOREIGN KEY (created_by) REFERENCES users(id)
+            ON DELETE CASCADE);`
         ; 
         await database.query(query);
     } catch (error) {

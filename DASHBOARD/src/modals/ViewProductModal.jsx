@@ -45,6 +45,7 @@ const ViewProductModal = ({ product }) => {
                 <strong>Price:</strong> Rs{" "}
                 {selectedProduct.price.toLocaleString()}
               </p>
+
               <p>
                 <strong>Ratings:</strong> ⭐ {selectedProduct.ratings}
               </p>
@@ -58,6 +59,23 @@ const ViewProductModal = ({ product }) => {
                 <strong>Created At:</strong>{" "}
                 {new Date(selectedProduct.created_at).toLocaleDateString()}
               </p>
+
+              {
+                selectedProduct.discount_city && Number(selectedProduct.discount_percent)>0 ?
+                (
+                  <p className="" >Location Discount :
+                  <strong>
+                    {
+                      selectedProduct.discount_percent}%</strong> OFF for order to <strong> {selectedProduct.discount_city}</strong>
+                      </p>
+                ):(
+                  <p className=" text-gray-400 text-sm mt-2"> No location discount configured </p>
+
+                )
+                    }
+                    
+
+              
             </div>
           </div>
         </div>

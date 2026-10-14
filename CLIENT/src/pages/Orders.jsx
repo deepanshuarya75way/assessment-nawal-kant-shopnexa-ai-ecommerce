@@ -181,17 +181,74 @@ const Orders = () => {
                             />
                             <div className="flex-1 min-w-0">
                               <h4 className="font-medium text-foreground truncate">{item.title}</h4>
-                              <p className="text-sm text-muted-foreground">Quantity : {item.quantity}</p>
+                              <p className="text-sm text-muted-foreground">Quantity : {item.quantity}* ${Number(item.price).toFixed(2)}</p>
+                              {Number(item.discount_amount) >0 && (
+                                <p className="" > Location discount saved ${Number(item.discount_amount).tofixed(2)}
+                                </p>
+              
+                              )}
 
                             </div>
                             <div className="text-right">
                               <p className="font-semibold text-foreground">
-                                ${item.price}
+                                ${(item.quantity*item.price).toFixed(2)}
                               </p>
                             </div>
                           </div>)
                         })}
                       </div>
+                      {
+                        Number(salectedOrder.discount_amount) > 0 && (
+                        <div className="">
+                          <div className="" >
+                            <span> Location discount applied </span>
+                            <span classname="ml-auto font-bold">-${Number(selectedOrder.discount_amount).toFixed(2)}</span>
+                            </div>
+                            {
+                              Array.isArray(selectedOrder.discount_details) && selectedOrder.discount_details.map((d,idx) => (
+                                <p key = {idx} classname="text-xs text-muted-foreground pl-6"> {d.explanation}
+                </p>
+
+
+                        ))
+                        }
+                      </div>
+
+                        )}
+                        {/* cost summery */}
+                        <div
+                        className ="">
+                          <div>
+                            <span> Subtotal (before discont) </span>
+                            <span>${(
+                              Number(selectedOrder.total_price)+Number(selectedOrder.discount_amount
+                                 || 0) - Number(selectedOrder.shipping_price || 0)
+                                  - Number(selectedOrder.tax_price || 0).toFixed(2))}
+                              </span>
+
+                            </div> 
+
+                           {
+                            Number(selectedOrder.discount_amount) >0 && (
+                              <div className="">
+                              <span>Location Discount({selectedOrder.shipping_info?.city})
+                              </span>
+                              <span>-${Number(selectedOrder.discount_amount).toFixed(2)}</span>
+                              </div>
+
+
+                            )
+                           } 
+                           {
+                            Number(selectedOrder.tax_price) >0 && (
+                              <div classname="">
+                              <span>Tax(18%)</span>
+                              <span>${Number(selectedOrder.tax_price).toFixed(2)}</span>
+                              </div>
+                            )
+                           }
+                            </div>
+
                       {/**ORDER ACTIONS */}
                       <div className="flex flex-wrap gap-3 mt-6 pt-6 border-t border-[hsla(var(--glass-border))]">
                         <button className="px-4 py-2 glass-card hover:glow-on-hover animate-smooth text-sm">

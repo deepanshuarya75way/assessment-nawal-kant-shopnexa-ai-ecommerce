@@ -6,6 +6,8 @@ export async function createOrdersTable() {
         buyer_id UUID NOT NULL,
         total_price DECIMAL(10,2) NOT NULL CHECK (total_price >= 0),
         tax_price DECIMAL(10,2) NOT NULL CHECK (tax_price >= 0),
+        discount_amount DECIMAL(10,2) DEFAULT 0 CHECK (discount_amount >= 0),
+        discount_details JSONB default '[]' :: JSONB,
         shipping_price DECIMAL(10,2) NOT NULL CHECK (shipping_price >= 0),
         order_status VARCHAR(50) DEFAULT 'Processing' CHECK (order_status IN ('Processing', 'Shipped', 'Delivered', 'Cancelled')),
         paid_at TIMESTAMP CHECK (paid_at IS NULL OR paid_at <= CURRENT_TIMESTAMP),

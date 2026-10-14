@@ -5,7 +5,7 @@ import database from "../database/db.js";
 import { getAIRecommendation } from "../utils/getAIRecommendation.js";
 
 export const createProduct = catchAsyncErrors(async (req, res, next) => {
-  const { name, description, price, category, stock } = req.body;
+  const { name, description, price, category, stock,discount_city,discount_percent } = req.body;
   const created_by = req.user.id;
 
   if (!name || !description || !price || !category || !stock) {
@@ -13,6 +13,9 @@ export const createProduct = catchAsyncErrors(async (req, res, next) => {
       new ErrorHandler("Please provide complete product details.", 400)
     );
   }
+  const cleanDiscountCity = 
+    discount_city && typeof discount_city === "string" && discount_city.trim() !== ""? discount_city.trim(): null;
+    const cleanDiscountPercent = discount_percent? Math.min(100, Math.max(0,parseFloat(discount_percent) || 0)) : 0;4
 
   let uploadedImages = [];
   if (req.files && req.files.images) {
@@ -35,7 +38,7 @@ export const createProduct = catchAsyncErrors(async (req, res, next) => {
   }
 
   const product = await database.query(
-    `INSERT INTO products (name, description, price, category, stock, images, created_by) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *`,
+    `INSERT INTO products (name, description, price, category, stock, images, created_by,discount_city,discount_percent) VALUES ($1, $2, $3, $4, $5, $6, $7 ,$8,$9) RETURNING *`,
     [
       name,
       description,
@@ -44,6 +47,8 @@ export const createProduct = catchAsyncErrors(async (req, res, next) => {
       stock,
       JSON.stringify(uploadedImages),
       created_by,
+      cleanDiscountCity,
+      cleanDiscountPercent,
     ]
   );
 
@@ -180,7 +185,7 @@ export const fetchAllProducts = catchAsyncErrors(async (req, res, next) => {
 
 export const updateProduct = catchAsyncErrors(async (req, res, next) => {
   const { productId } = req.params;
-  const { name, description, price, category, stock } = req.body;
+  const { name, description, price, category, stock,discount_city,discount_percent } = req.body;
 
   if (!name || !description || !price || !category || !stock) {
     return next(
@@ -193,9 +198,13 @@ export const updateProduct = catchAsyncErrors(async (req, res, next) => {
   if (product.rows.length === 0) {
     return next(new ErrorHandler("Product not found.", 404));
   }
+  const exitingProduct= product.rows[0];
+  const cleanDiscountCity =  discount_city !== undefined? discount_city && typeof discount_city ==="string" &&
+  discount_city.trim() !== "" ? discount_city.trim():null:existingProduct.discount_city;
+  const cleanDiscountPercent = discount_percent !== undefined ? Math.min(100, Math.max(0,parseFloat(discount_percent) || 0 )) : existingProduct.discount_percent;
   const result = await database.query(
-    `UPDATE products SET name = $1, description = $2, price = $3, category = $4, stock = $5 WHERE id = $6 RETURNING *`,
-    [name, description, price / 283, category, stock, productId]
+    `UPDATE products SET name = $1, description = $2, price = $3, category = $4, stock = $5 , discount_city = $6,discount_percent =$7  WHERE id = $8 RETURNING *`,
+    [name, description, price / 283, category, stock,cleanDiscountCity,cleanDiscountPercent, productId]
   );
   res.status(200).json({
     success: true,

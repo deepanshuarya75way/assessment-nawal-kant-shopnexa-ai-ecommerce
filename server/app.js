@@ -12,7 +12,7 @@ import productRouter from "./router/productRoutes.js";
 import adminRouter from "./router/adminRoutes.js";
 import orderRoutes from "./router/orderRoutes.js";
 import database from "./database/db.js";
-import paymentRouter from "./router/paymentRoutes.js";
+// import paymentRouter from "./router/paymentRoutes.js";
 
 config({ path: "./config/config.env" });
 
@@ -144,7 +144,7 @@ app.use("/api/v1/auth", authRouter);
 app.use("/api/v1/product", productRouter);
 app.use("/api/v1/admin", adminRouter);
 app.use("/api/v1/order", orderRoutes);
-app.use("/api/v1/payment", paymentRouter);
+// app.use("/api/v1/payment", paymentRouter);
 
 
 // ✅ Table creation
